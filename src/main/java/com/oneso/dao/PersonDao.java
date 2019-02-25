@@ -6,5 +6,5 @@ public interface PersonDao {
 
     Person findPerson(String firstName, String lastName);
 
-    Person newPerson();
+    Person newPerson(String firstName, String lastName);
 }

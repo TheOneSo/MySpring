@@ -16,4 +16,9 @@
         <constructor-arg name="qDao" ref="questionDao"/>
     </bean>
 
+    <bean id="quizService" class="com.oneso.service.QuizServiceImpl">
+        <constructor-arg name="personService" ref="personService"/>
+        <constructor-arg name="questionService" ref="questionService"/>
+    </bean>
+
 </beans>
