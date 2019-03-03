@@ -3,14 +3,22 @@ package com.oneso.service;
 import com.oneso.dao.PersonDao;
 import com.oneso.domain.Person;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.util.Scanner;
 
+@Service
 public class PersonServiceImpl implements PersonService {
 
     private final PersonDao pDao;
 
-    public PersonServiceImpl(PersonDao dao) {
+    private final LocalizationService localizationService;
+
+    @Autowired
+    public PersonServiceImpl(PersonDao dao, LocalizationService localizationService) {
         this.pDao = dao;
+        this.localizationService = localizationService;
     }
 
     public Person getPerson(String firstName, String lastName) {
@@ -20,9 +28,9 @@ public class PersonServiceImpl implements PersonService {
     public Person newPerson() {
         Scanner in = new Scanner(System.in);
 
-        System.out.print("Введите свое имя: ");
+        System.out.printf("%s: ", localizationService.getMessageWithLocale("newUser.firstName", null));
         String firstName = in.nextLine();
-        System.out.print("Введите свою фамилию: ");
+        System.out.printf("%s: ", localizationService.getMessageWithLocale("newUser.lastName", null));
         String lastName = in.nextLine();
 
         return pDao.newPerson(firstName, lastName);

@@ -6,7 +6,7 @@ import java.util.Map;
 
 public interface QuestionsDao {
 
-    Questions parsQuestionCSV();
+    Questions parsQuestionCSV(String pathCsv);
 
     Map<String, String> getAllQuestions();
 
