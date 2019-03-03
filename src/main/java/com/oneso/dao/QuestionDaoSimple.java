@@ -2,6 +2,8 @@ package com.oneso.dao;
 
 import com.oneso.domain.Questions;
 import com.opencsv.CSVReader;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Repository;
 
 import java.io.*;
 import java.net.URISyntaxException;
@@ -10,20 +12,20 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
+@Repository
 public class QuestionDaoSimple implements QuestionsDao {
 
     private Questions questions;
 
-    public Questions parsQuestionCSV() {
+    public Questions parsQuestionCSV(String pathCsv) {
         Map<String, String> out = new HashMap<>();
 
-        try(Reader reader = Files.newBufferedReader(Paths.get(QuestionDaoSimple.class.getResource("/Quiz.csv").toURI()))) {
+        try(Reader reader = Files.newBufferedReader(Paths.get(QuestionDaoSimple.class.getResource(pathCsv).toURI()))) {
 
             CSVReader csvReader = new CSVReader(reader);
 
             String[] next;
             while ((next = csvReader.readNext()) != null) {
-                // Пропускаем вопрос, в случае если нет ответа на него или нет вопроса к ответу
                 if(next[0] != null && next[1] != null) {
                     out.put(next[0], next[1]);
                 }

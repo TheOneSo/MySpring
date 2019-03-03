@@ -1,10 +1,12 @@
 package com.oneso.dao;
 
 import com.oneso.domain.Person;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class PersonDaoSimple implements PersonDao {
 
     private List<Person> personList = new ArrayList<>();
