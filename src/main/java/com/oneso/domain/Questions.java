@@ -1,5 +1,6 @@
 package com.oneso.domain;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class Questions {
@@ -8,6 +9,11 @@ public class Questions {
 
     public Questions(Map<String, String> question) {
         this.questions = question;
+    }
+
+    public Questions(String question, String answer) {
+        questions = new HashMap<>();
+        questions.put(question, answer);
     }
 
     public void addQuestion(String question, String answer) {

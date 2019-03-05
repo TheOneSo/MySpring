@@ -1,30 +1,81 @@
 package com.oneso.dao;
 
-import com.oneso.domain.Questions;
+import com.oneso.BeanForTests;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 
-import static org.mockito.Mockito.*;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
+
 import static org.junit.jupiter.api.Assertions.*;
 
+@RunWith(SpringRunner.class)
+@ContextConfiguration(classes = BeanForTests.class)
 @DisplayName("Тестирование хранилища опросника")
 class QuestionDaoTest {
 
-    @Test
-    @DisplayName("Парсинг CSV")
-    void parsCSVTest() {
-        QuestionsDao questionsDao = mock(QuestionsDao.class);
-        when(questionsDao.parsQuestionCSV(anyString())).thenReturn(new Questions(anyMap()));
+    @Value("${path.csv}")
+    private String path;
 
-        assertNotNull(questionsDao.parsQuestionCSV("path"));
+    @Disabled
+    @Test
+    @DisplayName("Файл парсится корректно")
+    void parsTest() {
+        QuestionDaoSimple questionDaoSimple = new QuestionDaoSimple();
+        questionDaoSimple.parsQuestionCSV(path);
+
+        assertFalse(questionDaoSimple.getAllQuestions().isEmpty());
     }
 
     @Test
-    @DisplayName("Добавить новый вопрос")
-    void addQuestionTest() {
-        QuestionsDao questionsDao = mock(QuestionsDao.class);
-        questionsDao.addQuestion(anyString(), anyString());
+    @DisplayName("Опросник создан")
+    void newQuestion() {
+        QuestionDaoSimple questionDaoSimple = new QuestionDaoSimple();
 
-        assertNotNull(questionsDao.getAllQuestions());
+        assertNotNull(questionDaoSimple.parsQuestionCSV("/Quiz.csv"));
+    }
+
+    @Test
+    @DisplayName("Добавить 1 вопрос")
+    void addQuestionTest() {
+        QuestionDaoSimple questionDaoSimple = new QuestionDaoSimple();
+        questionDaoSimple.addQuestion("1", "2");
+
+        assertNotNull(questionDaoSimple.getAllQuestions());
+    }
+
+    @Test
+    @DisplayName("Получить пустой опросник")
+    void newVoidQuestion() {
+        QuestionDaoSimple questionDaoSimple = new QuestionDaoSimple();
+
+        assertNotNull(questionDaoSimple.getAllQuestions());
+    }
+
+    @Test
+    @DisplayName("Добавление вопроса без ответа и наоборот")
+    void addQuestionNotAnswer() {
+        QuestionDaoSimple questionDaoSimple = new QuestionDaoSimple();
+        questionDaoSimple.addQuestion("1", null);
+
+        assertNotNull(questionDaoSimple.getAllQuestions());
+
+        questionDaoSimple.addQuestion(null, "1");
+
+        assertNotNull(questionDaoSimple.getAllQuestions());
+    }
+
+    @Test
+    @DisplayName("Парсинг документа с неправельным путем")
+    void createQuestionsFailPath() throws NullPointerException {
+        QuestionDaoSimple questionDaoSimple = new QuestionDaoSimple();
+
+        Throwable throwable = assertThrows(NullPointerException.class, () ->
+            questionDaoSimple.parsQuestionCSV("1") );
+
+        assertNotNull(throwable);
     }
 }

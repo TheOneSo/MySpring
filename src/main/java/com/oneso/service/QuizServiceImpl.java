@@ -28,6 +28,6 @@ public class QuizServiceImpl implements QuizService {
         questionService.start(questions);
 
         System.out.println("--------");
-        System.out.println(localizationService.getMessageWithLocale("goodbye.user", new String[] {person.toString()}));
+        System.out.println(localizationService.getMessage("goodbye.user", new String[] {person.toString()}));
     }
 }

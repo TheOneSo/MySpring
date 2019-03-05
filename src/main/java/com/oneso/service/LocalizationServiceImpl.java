@@ -1,5 +1,6 @@
 package com.oneso.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
@@ -12,24 +13,26 @@ public class LocalizationServiceImpl implements LocalizationService {
 
     private Locale locale;
 
-    public LocalizationServiceImpl(MessageSource messageSource) {
+    public LocalizationServiceImpl(MessageSource messageSource,
+                                   @Value("${locale.language}") String language,
+                                   @Value("${locale.country}") String country) {
         this.messageSource = messageSource;
-        this.locale = Locale.US;
+        locale = new Locale(language, country);
     }
 
     @Override
-    public void setLocale(String language) {
-
-        switch (language) {
-            case "ru": locale = new Locale("ru", "RU"); break;
-            case "en": locale = Locale.US; break;
-            default: locale = Locale.US;
-        }
+    public void setLocale(String language, String country) {
+        locale = new Locale(language, country);
     }
 
     @Override
-    public String getMessageWithLocale(String bundleProp, Object[] args) {
-        return messageSource.getMessage(bundleProp, args, locale);
+    public String getMessage(String text, Object[] args) {
+        return messageSource.getMessage(text, args, locale);
+    }
+
+    @Override
+    public String getMessage(String text) {
+        return messageSource.getMessage(text, null, locale);
     }
 
     @Override

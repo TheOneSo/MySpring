@@ -2,9 +2,11 @@ package com.oneso.service;
 
 public interface LocalizationService {
 
-    void setLocale(String language);
+    void setLocale(String language, String country);
 
-    String getMessageWithLocale(String bundleProp, Object[] args);
+    String getMessage(String text, Object[] args);
+
+    String getMessage(String text);
 
     String getLanguage();
 }

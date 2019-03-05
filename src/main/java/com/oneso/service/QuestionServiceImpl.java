@@ -17,11 +17,8 @@ public class QuestionServiceImpl implements QuestionService {
 
     private final LocalizationService localizationService;
 
-    @Value("${ru.path.quiz}")
-    private String ruPathToCSV;
-
-    @Value("${en.path.quiz}")
-    private String enPathToCSV;
+    @Value("${path.quiz.csv}")
+    private String pathToCSV;
 
     @Autowired
     public QuestionServiceImpl(QuestionsDao qDao, LocalizationService localizationService) {
@@ -30,12 +27,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     public Questions getQuestions() {
-
-        switch (localizationService.getLanguage()) {
-            case "ru": return qDao.parsQuestionCSV(ruPathToCSV);
-            case "en": return qDao.parsQuestionCSV(enPathToCSV);
-            default: return qDao.parsQuestionCSV("/en_Quiz.csv");
-        }
+        return qDao.parsQuestionCSV(pathToCSV);
     }
 
     public void start(Questions questions) {
@@ -43,13 +35,13 @@ public class QuestionServiceImpl implements QuestionService {
 
         int current = 0;
 
-        System.out.println(localizationService.getMessageWithLocale("welcome.quiz", new Object[] {question.size()}));
+        System.out.println(localizationService.getMessage("welcome.quiz", new Object[] {question.size()}));
 
         Scanner in = new Scanner(System.in);
 
         for(Map.Entry<String, String> entry : question.entrySet()) {
 
-            System.out.printf("%s: %s ", localizationService.getMessageWithLocale("question", null), entry.getKey());
+            System.out.printf("%s: %s ", localizationService.getMessage("question"), entry.getKey());
 
             String temp = in.nextLine().trim();
 
@@ -58,6 +50,6 @@ public class QuestionServiceImpl implements QuestionService {
             }
         }
 
-        System.out.println(localizationService.getMessageWithLocale("finnal.quiz", new Object[] {current}));
+        System.out.println(localizationService.getMessage("finnal.quiz", new Object[] {current}));
     }
 }

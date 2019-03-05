@@ -2,7 +2,6 @@ package com.oneso.dao;
 
 import com.oneso.domain.Questions;
 import com.opencsv.CSVReader;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import java.io.*;
@@ -32,7 +31,7 @@ public class QuestionDaoSimple implements QuestionsDao {
             }
 
         } catch (IOException | URISyntaxException e) {
-            System.out.println(e.getMessage());
+
         }
 
         questions = new Questions(out);
@@ -40,10 +39,18 @@ public class QuestionDaoSimple implements QuestionsDao {
     }
 
     public Map<String, String> getAllQuestions() {
-        return questions.getQuestions();
+        if(questions != null) {
+            return questions.getQuestions();
+        }
+
+        return new HashMap<>();
     }
 
     public void addQuestion(String question, String answer) {
+        if(questions == null) {
+            questions = new Questions(question, answer);
+        }
+
         this.questions.addQuestion(question, answer);
     }
 }
