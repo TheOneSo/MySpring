@@ -28,9 +28,9 @@ public class PersonServiceImpl implements PersonService {
     public Person newPerson() {
         Scanner in = new Scanner(System.in);
 
-        System.out.printf("%s: ", localizationService.getMessageWithLocale("newUser.firstName", null));
+        System.out.printf("%s: ", localizationService.getMessage("newUser.firstName"));
         String firstName = in.nextLine();
-        System.out.printf("%s: ", localizationService.getMessageWithLocale("newUser.lastName", null));
+        System.out.printf("%s: ", localizationService.getMessage("newUser.lastName"));
         String lastName = in.nextLine();
 
         return pDao.newPerson(firstName, lastName);
