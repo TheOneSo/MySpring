@@ -8,28 +8,37 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@DisplayName("Тестирование опросника")
+@DisplayName("Опросник")
 class QuestionsTest {
 
     @Test
-    @DisplayName("Проверка создания")
-    void createQuestionsTest() {
-        Questions questions = new Questions(new HashMap<>() {{put("test1", "test");}});
+    @DisplayName("коррекстно создается")
+    void shouldCorrectCreator() {
+        Questions questions1 = new Questions(new HashMap<>() {{put("test1", "test");}});
+        Questions questions2 = new Questions("test1", "test");
+
         Map<String, String> temp = new HashMap<>(){{put("test1", "test");}};
 
-        assertEquals(temp, questions.getQuestions());
+        assertEquals(temp, questions1.getQuestions());
+        assertEquals(temp, questions2.getQuestions());
     }
 
     @Test
-    @DisplayName("Проверка добавления теста")
-    void addQuestionTest() {
-        Questions questions = new Questions(new HashMap<>() {{put("test1", "test");}});
-        questions.addQuestion("test2", "test");
-        Map<String, String> temp = new HashMap<>(){{
-            put("test1", "test");
-            put("test2", "test");
-        }};
+    @DisplayName("добавляет новый вопрос")
+    void shouldAddNewQuestion() {
+        Questions questions = new Questions("1", "2");
+        questions.addQuestion("2", "3");
 
-        assertEquals(temp, questions.getQuestions());
+        assertEquals(2, questions.getQuestions().size());
+
+    }
+
+    @Test
+    @DisplayName("не создает повторяющийся вопрос")
+    void shouldNotCreatDoubleQuestion() {
+        Questions questions = new Questions("1", "2");
+        questions.addQuestion("1", "2");
+
+        assertEquals(1, questions.getQuestions().size());
     }
 }

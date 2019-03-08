@@ -31,7 +31,7 @@ public class QuestionDaoSimple implements QuestionsDao {
             }
 
         } catch (IOException | URISyntaxException e) {
-
+            System.out.println(e.getMessage());
         }
 
         questions = new Questions(out);
@@ -47,6 +47,10 @@ public class QuestionDaoSimple implements QuestionsDao {
     }
 
     public void addQuestion(String question, String answer) {
+        if(question == null || answer == null) {
+            return;
+        }
+
         if(questions == null) {
             questions = new Questions(question, answer);
         }
