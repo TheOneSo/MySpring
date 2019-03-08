@@ -1,5 +1,6 @@
 package com.oneso.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
@@ -11,13 +12,12 @@ public class LocalizationServiceImpl implements LocalizationService {
 
     private final MessageSource messageSource;
 
+    @Value("${user.locale}")
     private Locale locale;
 
-    public LocalizationServiceImpl(MessageSource messageSource,
-                                   @Value("${locale.language}") String language,
-                                   @Value("${locale.country}") String country) {
+    @Autowired
+    public LocalizationServiceImpl(MessageSource messageSource) {
         this.messageSource = messageSource;
-        locale = new Locale(language, country);
     }
 
     @Override

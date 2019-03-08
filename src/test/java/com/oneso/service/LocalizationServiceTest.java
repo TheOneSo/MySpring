@@ -1,61 +1,70 @@
 package com.oneso.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.context.MessageSource;
 
+import java.util.Locale;
+
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-@DisplayName("Тестирование сервиса локализации")
+@DisplayName("Сервис по работе с локализацией")
 class LocalizationServiceTest {
 
     @Mock
     private MessageSource messageSource;
 
-    @Test
-    @DisplayName("Получение языка языка")
-    void getLanguageTest() {
-        LocalizationService local = new LocalizationServiceImpl(messageSource, "ru", "RU");
+    private LocalizationServiceImpl service;
 
-        assertEquals("ru", local.getLanguage());
+    @BeforeEach
+    void setUp() {
+        messageSource = mock(MessageSource.class);
+        when(messageSource.getMessage(anyString(), any(Object[].class), any(Locale.class))).thenReturn("test");
+        when(messageSource.getMessage(anyString(), isNull(), any(Locale.class))).thenReturn("test");
     }
 
     @Test
-    @DisplayName("Проверка смены языка")
-    void setLanguageTest() {
-        LocalizationService local = new LocalizationServiceImpl(messageSource, "ru", "RU");
-        local.setLocale("en", "US");
+    @DisplayName("корректно создается")
+    void shouldCorrectCreator() {
+        service = new LocalizationServiceImpl(messageSource);
 
-        assertEquals("en", local.getLanguage());
+        assertNotNull(service);
     }
 
     @Test
-    @DisplayName("Получение сообщения")
-    void getMessageTest() {
-        LocalizationService local = mock(LocalizationService.class);
-        when(local.getMessage("text")).thenReturn("text");
+    @DisplayName("меняет язык")
+    void shouldSwitchLanguage() {
+        service = new LocalizationServiceImpl(messageSource);
+        service.setLocale("ru", "RU");
 
-        assertEquals("text", local.getMessage("text"));
+        assertEquals("ru", service.getLanguage());
+
+        service.setLocale("en", "US");
+
+        assertEquals("en", service.getLanguage());
     }
 
     @Test
-    @DisplayName("Получение сообщения с параметрами")
-    void getMessageWithArgs() {
-        LocalizationService local = mock(LocalizationService.class);
-        when(local.getMessage("text {0}", new Object[] {"1"})).thenReturn("text 1");
+    @DisplayName("возвращает отформатированное сообщение")
+    void shouldReturnFormattedMessage() {
+        service = new LocalizationServiceImpl(messageSource);
 
-        assertEquals("text 1", local.getMessage("text {0}", new Object[] {"1"}));
+        service.setLocale("ru", "RU");
+
+        assertNotNull(service.getMessage("test"));
+        assertNotNull(service.getMessage("test", new Object[] {"1"}));
     }
 
     @Test
-    @DisplayName("Проверка вывода сообщения в нужном языке")
-    void getMessageWithLocaleTest() {
-        LocalizationService localizationService = mock(LocalizationService.class);
-        when(localizationService.getMessage("hello.user")).thenReturn("Привет пользователь");
-        localizationService.setLocale("ru", "RU");
-
-        assertEquals("Привет пользователь", localizationService.getMessage("hello.user"));
+    @DisplayName("вызывает методы getMessage с нужными параметрами")
+    void shouldExecuteMethodsGetMessage() {
+        service = new LocalizationServiceImpl(messageSource);
+        service.setLocale("en", "US");
+        service.getMessage("test");
+        verify(messageSource, times(1)).getMessage("test", null, Locale.US);
     }
+
 }

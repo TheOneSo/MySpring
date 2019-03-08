@@ -1,34 +1,24 @@
 package com.oneso.dao;
 
-import com.oneso.domain.Person;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-@DisplayName("Тестирование хранилища персон")
+@DisplayName("Дао для работы с персонами")
 class PersonDaoTest {
 
-    private Person person;
-
-    @BeforeEach
-    void setUp() {
-        person = new Person("Ivan", "Ivanov");
-    }
-
     @Test
-    @DisplayName("Новая персона создается корректно")
-    void newPersonTest() {
+    @DisplayName("корректно создает новую персону")
+    void shouldCorrectCreatNewPerson() {
         PersonDaoSimple personDaoSimple = new PersonDaoSimple();
 
         assertNotNull(personDaoSimple.newPerson("1", "2"));
     }
 
     @Test
-    @DisplayName("Хранения персоны")
-    void storagePersonTest() {
+    @DisplayName("хранит персону")
+    void shouldStoragePerson() {
         PersonDaoSimple personDaoSimple = new PersonDaoSimple();
         personDaoSimple.newPerson("1", "2");
 
@@ -36,21 +26,13 @@ class PersonDaoTest {
     }
 
     @Test
-    @DisplayName("Новая персона существует")
-    void getPersonTest() {
-        PersonDao personDao = mock(PersonDao.class);
-        when(personDao.newPerson("Ivan", "Ivanov")).thenReturn(person);
+    @DisplayName("находит нужную персону")
+    void shouldFindNeededPerson() {
+        PersonDaoSimple personDaoSimple = new PersonDaoSimple();
+        personDaoSimple.newPerson("1", "2");
+        personDaoSimple.newPerson("3", "4");
+        personDaoSimple.newPerson("5", "6");
 
-        assertEquals(person, personDao.newPerson("Ivan", "Ivanov"));
+        assertNotNull(personDaoSimple.findPerson("3", "4"));
     }
-
-    @Test
-    @DisplayName("Поиск персоны")
-    void findPersonTest() {
-        PersonDao personDao = mock(PersonDao.class);
-        when(personDao.findPerson("Ivan", "Ivanov")).thenReturn(person);
-
-        assertEquals(person, personDao.findPerson("Ivan", "Ivanov"));
-    }
-
 }
